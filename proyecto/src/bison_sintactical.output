@@ -1,0 +1,1705 @@
+State 80 conflicts: 9 reduce/reduce
+State 110 conflicts: 9 reduce/reduce
+State 129 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: declaration_list
+
+    2 declaration_list: declaration_list declaration
+    3                 | declaration
+
+    4 declaration: var_dec
+    5            | fun_dec
+
+    6 var_dec: TYPE_VALUE IDENTIF SEMI_COLON
+    7        | TYPE_VALUE ASTERISC_CONST IDENTIF SEMI_COLON
+    8        | TYPE_VALUE IDENTIF LEFT_BRACKET_ INT_VALUE RIGHT_BRACKET_ SEMI_COLON
+
+    9 fun_dec: TYPE_VALUE IDENTIF LEFT_PARENTHESIS params RIGHT_PARENTHESIS compound_stmt
+   10        | VOID_TYPE_ IDENTIF LEFT_PARENTHESIS params RIGHT_PARENTHESIS compound_stmt
+
+   11 params: VOID_TYPE_
+   12       | param_list
+
+   13 param_list: param_list COMMA_CONST param
+   14           | param
+
+   15 param: TYPE_VALUE IDENTIF
+   16      | TYPE_VALUE ASTERISC_CONST IDENTIF
+   17      | TYPE_VALUE IDENTIF LEFT_BRACKET_ RIGHT_BRACKET_
+
+   18 compound_stmt: LEFT_CURLY_ local_decs statement_list RIGHT_CURLY_
+
+   19 local_decs: local_decs var_dec
+   20           | %empty
+
+   21 statement_list: statement_list statement
+   22               | %empty
+
+   23 statement: expression_stmt
+   24          | compound_stmt
+   25          | if_stmt
+   26          | while_stmt
+   27          | return_stmt
+   28          | write_stmt
+
+   29 expression_stmt: expression SEMI_COLON
+   30                | SEMI_COLON
+
+   31 if_stmt: IF_EXPR LEFT_PARENTHESIS expression RIGHT_PARENTHESIS statement else_stmt
+
+   32 else_stmt: ELSE_EXPR statement
+   33          | %empty
+
+   34 while_stmt: WHILE_EXPR LEFT_PARENTHESIS expression RIGHT_PARENTHESIS statement
+
+   35 return_stmt: RETURN_EXPR SEMI_COLON
+   36            | RETURN_EXPR expression SEMI_COLON
+
+   37 write_stmt: WRITE_EXPR LEFT_PARENTHESIS expression RIGHT_PARENTHESIS SEMI_COLON
+   38           | WRITELN_EXPR LEFT_PARENTHESIS RIGHT_PARENTHESIS SEMI_COLON
+
+   39 expression: var ASSIGNATION_CONST expression
+   40           | comp_exp
+
+   41 var: IDENTIF
+   42    | variable_array_index
+   43    | ASTERISC_CONST IDENTIF
+
+   44 comp_exp: e COMPARATORS e
+   45         | e
+
+   46 e: e addop t
+   47  | t
+
+   48 addop: PLUS_CONST
+   49      | MINUS_CONST
+
+   50 t: t mulop f
+   51  | f
+
+   52 mulop: ASTERISC_CONST
+   53      | MUL_OPERATION
+
+   54 f: MINUS_CONST f
+   55  | AMPERSAND_CONST factor
+   56  | ASTERISC_CONST factor
+   57  | factor
+
+   58 factor: LEFT_PARENTHESIS expression RIGHT_PARENTHESIS
+   59       | fun_call
+   60       | read_stmt
+   61       | ASTERISC_CONST IDENTIF
+   62       | IDENTIF
+   63       | variable_array_index
+   64       | INT_VALUE
+   65       | STRING_VALUE
+
+   66 variable_array_index: IDENTIF LEFT_BRACKET_ expression RIGHT_BRACKET_
+
+   67 read_stmt: READ_EXPR LEFT_PARENTHESIS RIGHT_PARENTHESIS
+
+   68 fun_call: IDENTIF LEFT_PARENTHESIS args RIGHT_PARENTHESIS
+
+   69 args: arg_list
+   70     | %empty
+
+   71 arg_list: arg_list COMMA_CONST expression
+   72         | expression
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+INT_VALUE (258) 8 64
+STRING_VALUE (259) 65
+IDENTIF (260) 6 7 8 9 10 15 16 17 41 43 61 62 66 68
+LEFT_PARENTHESIS (261) 9 10 31 34 37 38 58 67 68
+RIGHT_PARENTHESIS (262) 9 10 31 34 37 38 58 67 68
+LEFT_BRACKET_ (263) 8 17 66
+RIGHT_BRACKET_ (264) 8 17 66
+LEFT_CURLY_ (265) 18
+RIGHT_CURLY_ (266) 18
+VOID_TYPE_ (267) 10 11
+TYPE_VALUE (268) 6 7 8 9 15 16 17
+SEMI_COLON (269) 6 7 8 29 30 35 36 37 38
+COMMA_CONST (270) 13 71
+ASTERISC_CONST (271) 7 16 43 52 56 61
+AMPERSAND_CONST (272) 55
+ASSIGNATION_CONST (273) 39
+COMPARATORS (274) 44
+PLUS_CONST (275) 48
+MINUS_CONST (276) 49 54
+MUL_OPERATION (277) 53
+IF_EXPR (278) 31
+ELSE_EXPR (279) 32
+WHILE_EXPR (280) 34
+RETURN_EXPR (281) 35 36
+WRITE_EXPR (282) 37
+WRITELN_EXPR (283) 38
+READ_EXPR (284) 67
+
+
+Nonterminals, with rules where they appear
+
+$accept (30)
+    on left: 0
+program (31)
+    on left: 1, on right: 0
+declaration_list (32)
+    on left: 2 3, on right: 1 2
+declaration (33)
+    on left: 4 5, on right: 2 3
+var_dec (34)
+    on left: 6 7 8, on right: 4 19
+fun_dec (35)
+    on left: 9 10, on right: 5
+params (36)
+    on left: 11 12, on right: 9 10
+param_list (37)
+    on left: 13 14, on right: 12 13
+param (38)
+    on left: 15 16 17, on right: 13 14
+compound_stmt (39)
+    on left: 18, on right: 9 10 24
+local_decs (40)
+    on left: 19 20, on right: 18 19
+statement_list (41)
+    on left: 21 22, on right: 18 21
+statement (42)
+    on left: 23 24 25 26 27 28, on right: 21 31 32 34
+expression_stmt (43)
+    on left: 29 30, on right: 23
+if_stmt (44)
+    on left: 31, on right: 25
+else_stmt (45)
+    on left: 32 33, on right: 31
+while_stmt (46)
+    on left: 34, on right: 26
+return_stmt (47)
+    on left: 35 36, on right: 27
+write_stmt (48)
+    on left: 37 38, on right: 28
+expression (49)
+    on left: 39 40, on right: 29 31 34 36 37 39 58 66 71 72
+var (50)
+    on left: 41 42 43, on right: 39
+comp_exp (51)
+    on left: 44 45, on right: 40
+e (52)
+    on left: 46 47, on right: 44 45 46
+addop (53)
+    on left: 48 49, on right: 46
+t (54)
+    on left: 50 51, on right: 46 47 50
+mulop (55)
+    on left: 52 53, on right: 50
+f (56)
+    on left: 54 55 56 57, on right: 50 51 54
+factor (57)
+    on left: 58 59 60 61 62 63 64 65, on right: 55 56 57
+variable_array_index (58)
+    on left: 66, on right: 42 63
+read_stmt (59)
+    on left: 67, on right: 60
+fun_call (60)
+    on left: 68, on right: 59
+args (61)
+    on left: 69 70, on right: 68
+arg_list (62)
+    on left: 71 72, on right: 69 71
+
+
+State 0
+
+    0 $accept: . program $end
+
+    VOID_TYPE_  shift, and go to state 1
+    TYPE_VALUE  shift, and go to state 2
+
+    program           go to state 3
+    declaration_list  go to state 4
+    declaration       go to state 5
+    var_dec           go to state 6
+    fun_dec           go to state 7
+
+
+State 1
+
+   10 fun_dec: VOID_TYPE_ . IDENTIF LEFT_PARENTHESIS params RIGHT_PARENTHESIS compound_stmt
+
+    IDENTIF  shift, and go to state 8
+
+
+State 2
+
+    6 var_dec: TYPE_VALUE . IDENTIF SEMI_COLON
+    7        | TYPE_VALUE . ASTERISC_CONST IDENTIF SEMI_COLON
+    8        | TYPE_VALUE . IDENTIF LEFT_BRACKET_ INT_VALUE RIGHT_BRACKET_ SEMI_COLON
+    9 fun_dec: TYPE_VALUE . IDENTIF LEFT_PARENTHESIS params RIGHT_PARENTHESIS compound_stmt
+
+    IDENTIF         shift, and go to state 9
+    ASTERISC_CONST  shift, and go to state 10
+
+
+State 3
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 11
+
+
+State 4
+
+    1 program: declaration_list .
+    2 declaration_list: declaration_list . declaration
+
+    VOID_TYPE_  shift, and go to state 1
+    TYPE_VALUE  shift, and go to state 2
+
+    $default  reduce using rule 1 (program)
+
+    declaration  go to state 12
+    var_dec      go to state 6
+    fun_dec      go to state 7
+
+
+State 5
+
+    3 declaration_list: declaration .
+
+    $default  reduce using rule 3 (declaration_list)
+
+
+State 6
+
+    4 declaration: var_dec .
+
+    $default  reduce using rule 4 (declaration)
+
+
+State 7
+
+    5 declaration: fun_dec .
+
+    $default  reduce using rule 5 (declaration)
+
+
+State 8
+
+   10 fun_dec: VOID_TYPE_ IDENTIF . LEFT_PARENTHESIS params RIGHT_PARENTHESIS compound_stmt
+
+    LEFT_PARENTHESIS  shift, and go to state 13
+
+
+State 9
+
+    6 var_dec: TYPE_VALUE IDENTIF . SEMI_COLON
+    8        | TYPE_VALUE IDENTIF . LEFT_BRACKET_ INT_VALUE RIGHT_BRACKET_ SEMI_COLON
+    9 fun_dec: TYPE_VALUE IDENTIF . LEFT_PARENTHESIS params RIGHT_PARENTHESIS compound_stmt
+
+    LEFT_PARENTHESIS  shift, and go to state 14
+    LEFT_BRACKET_     shift, and go to state 15
+    SEMI_COLON        shift, and go to state 16
+
+
+State 10
+
+    7 var_dec: TYPE_VALUE ASTERISC_CONST . IDENTIF SEMI_COLON
+
+    IDENTIF  shift, and go to state 17
+
+
+State 11
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 12
+
+    2 declaration_list: declaration_list declaration .
+
+    $default  reduce using rule 2 (declaration_list)
+
+
+State 13
+
+   10 fun_dec: VOID_TYPE_ IDENTIF LEFT_PARENTHESIS . params RIGHT_PARENTHESIS compound_stmt
+
+    VOID_TYPE_  shift, and go to state 18
+    TYPE_VALUE  shift, and go to state 19
+
+    params      go to state 20
+    param_list  go to state 21
+    param       go to state 22
+
+
+State 14
+
+    9 fun_dec: TYPE_VALUE IDENTIF LEFT_PARENTHESIS . params RIGHT_PARENTHESIS compound_stmt
+
+    VOID_TYPE_  shift, and go to state 18
+    TYPE_VALUE  shift, and go to state 19
+
+    params      go to state 23
+    param_list  go to state 21
+    param       go to state 22
+
+
+State 15
+
+    8 var_dec: TYPE_VALUE IDENTIF LEFT_BRACKET_ . INT_VALUE RIGHT_BRACKET_ SEMI_COLON
+
+    INT_VALUE  shift, and go to state 24
+
+
+State 16
+
+    6 var_dec: TYPE_VALUE IDENTIF SEMI_COLON .
+
+    $default  reduce using rule 6 (var_dec)
+
+
+State 17
+
+    7 var_dec: TYPE_VALUE ASTERISC_CONST IDENTIF . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 25
+
+
+State 18
+
+   11 params: VOID_TYPE_ .
+
+    $default  reduce using rule 11 (params)
+
+
+State 19
+
+   15 param: TYPE_VALUE . IDENTIF
+   16      | TYPE_VALUE . ASTERISC_CONST IDENTIF
+   17      | TYPE_VALUE . IDENTIF LEFT_BRACKET_ RIGHT_BRACKET_
+
+    IDENTIF         shift, and go to state 26
+    ASTERISC_CONST  shift, and go to state 27
+
+
+State 20
+
+   10 fun_dec: VOID_TYPE_ IDENTIF LEFT_PARENTHESIS params . RIGHT_PARENTHESIS compound_stmt
+
+    RIGHT_PARENTHESIS  shift, and go to state 28
+
+
+State 21
+
+   12 params: param_list .
+   13 param_list: param_list . COMMA_CONST param
+
+    COMMA_CONST  shift, and go to state 29
+
+    $default  reduce using rule 12 (params)
+
+
+State 22
+
+   14 param_list: param .
+
+    $default  reduce using rule 14 (param_list)
+
+
+State 23
+
+    9 fun_dec: TYPE_VALUE IDENTIF LEFT_PARENTHESIS params . RIGHT_PARENTHESIS compound_stmt
+
+    RIGHT_PARENTHESIS  shift, and go to state 30
+
+
+State 24
+
+    8 var_dec: TYPE_VALUE IDENTIF LEFT_BRACKET_ INT_VALUE . RIGHT_BRACKET_ SEMI_COLON
+
+    RIGHT_BRACKET_  shift, and go to state 31
+
+
+State 25
+
+    7 var_dec: TYPE_VALUE ASTERISC_CONST IDENTIF SEMI_COLON .
+
+    $default  reduce using rule 7 (var_dec)
+
+
+State 26
+
+   15 param: TYPE_VALUE IDENTIF .
+   17      | TYPE_VALUE IDENTIF . LEFT_BRACKET_ RIGHT_BRACKET_
+
+    LEFT_BRACKET_  shift, and go to state 32
+
+    $default  reduce using rule 15 (param)
+
+
+State 27
+
+   16 param: TYPE_VALUE ASTERISC_CONST . IDENTIF
+
+    IDENTIF  shift, and go to state 33
+
+
+State 28
+
+   10 fun_dec: VOID_TYPE_ IDENTIF LEFT_PARENTHESIS params RIGHT_PARENTHESIS . compound_stmt
+
+    LEFT_CURLY_  shift, and go to state 34
+
+    compound_stmt  go to state 35
+
+
+State 29
+
+   13 param_list: param_list COMMA_CONST . param
+
+    TYPE_VALUE  shift, and go to state 19
+
+    param  go to state 36
+
+
+State 30
+
+    9 fun_dec: TYPE_VALUE IDENTIF LEFT_PARENTHESIS params RIGHT_PARENTHESIS . compound_stmt
+
+    LEFT_CURLY_  shift, and go to state 34
+
+    compound_stmt  go to state 37
+
+
+State 31
+
+    8 var_dec: TYPE_VALUE IDENTIF LEFT_BRACKET_ INT_VALUE RIGHT_BRACKET_ . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 38
+
+
+State 32
+
+   17 param: TYPE_VALUE IDENTIF LEFT_BRACKET_ . RIGHT_BRACKET_
+
+    RIGHT_BRACKET_  shift, and go to state 39
+
+
+State 33
+
+   16 param: TYPE_VALUE ASTERISC_CONST IDENTIF .
+
+    $default  reduce using rule 16 (param)
+
+
+State 34
+
+   18 compound_stmt: LEFT_CURLY_ . local_decs statement_list RIGHT_CURLY_
+
+    $default  reduce using rule 20 (local_decs)
+
+    local_decs  go to state 40
+
+
+State 35
+
+   10 fun_dec: VOID_TYPE_ IDENTIF LEFT_PARENTHESIS params RIGHT_PARENTHESIS compound_stmt .
+
+    $default  reduce using rule 10 (fun_dec)
+
+
+State 36
+
+   13 param_list: param_list COMMA_CONST param .
+
+    $default  reduce using rule 13 (param_list)
+
+
+State 37
+
+    9 fun_dec: TYPE_VALUE IDENTIF LEFT_PARENTHESIS params RIGHT_PARENTHESIS compound_stmt .
+
+    $default  reduce using rule 9 (fun_dec)
+
+
+State 38
+
+    8 var_dec: TYPE_VALUE IDENTIF LEFT_BRACKET_ INT_VALUE RIGHT_BRACKET_ SEMI_COLON .
+
+    $default  reduce using rule 8 (var_dec)
+
+
+State 39
+
+   17 param: TYPE_VALUE IDENTIF LEFT_BRACKET_ RIGHT_BRACKET_ .
+
+    $default  reduce using rule 17 (param)
+
+
+State 40
+
+   18 compound_stmt: LEFT_CURLY_ local_decs . statement_list RIGHT_CURLY_
+   19 local_decs: local_decs . var_dec
+
+    TYPE_VALUE  shift, and go to state 41
+
+    $default  reduce using rule 22 (statement_list)
+
+    var_dec         go to state 42
+    statement_list  go to state 43
+
+
+State 41
+
+    6 var_dec: TYPE_VALUE . IDENTIF SEMI_COLON
+    7        | TYPE_VALUE . ASTERISC_CONST IDENTIF SEMI_COLON
+    8        | TYPE_VALUE . IDENTIF LEFT_BRACKET_ INT_VALUE RIGHT_BRACKET_ SEMI_COLON
+
+    IDENTIF         shift, and go to state 44
+    ASTERISC_CONST  shift, and go to state 10
+
+
+State 42
+
+   19 local_decs: local_decs var_dec .
+
+    $default  reduce using rule 19 (local_decs)
+
+
+State 43
+
+   18 compound_stmt: LEFT_CURLY_ local_decs statement_list . RIGHT_CURLY_
+   21 statement_list: statement_list . statement
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    LEFT_CURLY_       shift, and go to state 34
+    RIGHT_CURLY_      shift, and go to state 49
+    SEMI_COLON        shift, and go to state 50
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    IF_EXPR           shift, and go to state 54
+    WHILE_EXPR        shift, and go to state 55
+    RETURN_EXPR       shift, and go to state 56
+    WRITE_EXPR        shift, and go to state 57
+    WRITELN_EXPR      shift, and go to state 58
+    READ_EXPR         shift, and go to state 59
+
+    compound_stmt         go to state 60
+    statement             go to state 61
+    expression_stmt       go to state 62
+    if_stmt               go to state 63
+    while_stmt            go to state 64
+    return_stmt           go to state 65
+    write_stmt            go to state 66
+    expression            go to state 67
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 44
+
+    6 var_dec: TYPE_VALUE IDENTIF . SEMI_COLON
+    8        | TYPE_VALUE IDENTIF . LEFT_BRACKET_ INT_VALUE RIGHT_BRACKET_ SEMI_COLON
+
+    LEFT_BRACKET_  shift, and go to state 15
+    SEMI_COLON     shift, and go to state 16
+
+
+State 45
+
+   64 factor: INT_VALUE .
+
+    $default  reduce using rule 64 (factor)
+
+
+State 46
+
+   65 factor: STRING_VALUE .
+
+    $default  reduce using rule 65 (factor)
+
+
+State 47
+
+   41 var: IDENTIF .
+   62 factor: IDENTIF .
+   66 variable_array_index: IDENTIF . LEFT_BRACKET_ expression RIGHT_BRACKET_
+   68 fun_call: IDENTIF . LEFT_PARENTHESIS args RIGHT_PARENTHESIS
+
+    LEFT_PARENTHESIS  shift, and go to state 77
+    LEFT_BRACKET_     shift, and go to state 78
+
+    ASSIGNATION_CONST  reduce using rule 41 (var)
+    $default           reduce using rule 62 (factor)
+
+
+State 48
+
+   58 factor: LEFT_PARENTHESIS . expression RIGHT_PARENTHESIS
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    expression            go to state 79
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 49
+
+   18 compound_stmt: LEFT_CURLY_ local_decs statement_list RIGHT_CURLY_ .
+
+    $default  reduce using rule 18 (compound_stmt)
+
+
+State 50
+
+   30 expression_stmt: SEMI_COLON .
+
+    $default  reduce using rule 30 (expression_stmt)
+
+
+State 51
+
+   43 var: ASTERISC_CONST . IDENTIF
+   56 f: ASTERISC_CONST . factor
+   61 factor: ASTERISC_CONST . IDENTIF
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 80
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 81
+    READ_EXPR         shift, and go to state 59
+
+    factor                go to state 82
+    variable_array_index  go to state 83
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 52
+
+   55 f: AMPERSAND_CONST . factor
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 84
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 81
+    READ_EXPR         shift, and go to state 59
+
+    factor                go to state 85
+    variable_array_index  go to state 83
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 53
+
+   54 f: MINUS_CONST . f
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 84
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 86
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    f                     go to state 87
+    factor                go to state 73
+    variable_array_index  go to state 83
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 54
+
+   31 if_stmt: IF_EXPR . LEFT_PARENTHESIS expression RIGHT_PARENTHESIS statement else_stmt
+
+    LEFT_PARENTHESIS  shift, and go to state 88
+
+
+State 55
+
+   34 while_stmt: WHILE_EXPR . LEFT_PARENTHESIS expression RIGHT_PARENTHESIS statement
+
+    LEFT_PARENTHESIS  shift, and go to state 89
+
+
+State 56
+
+   35 return_stmt: RETURN_EXPR . SEMI_COLON
+   36            | RETURN_EXPR . expression SEMI_COLON
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    SEMI_COLON        shift, and go to state 90
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    expression            go to state 91
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 57
+
+   37 write_stmt: WRITE_EXPR . LEFT_PARENTHESIS expression RIGHT_PARENTHESIS SEMI_COLON
+
+    LEFT_PARENTHESIS  shift, and go to state 92
+
+
+State 58
+
+   38 write_stmt: WRITELN_EXPR . LEFT_PARENTHESIS RIGHT_PARENTHESIS SEMI_COLON
+
+    LEFT_PARENTHESIS  shift, and go to state 93
+
+
+State 59
+
+   67 read_stmt: READ_EXPR . LEFT_PARENTHESIS RIGHT_PARENTHESIS
+
+    LEFT_PARENTHESIS  shift, and go to state 94
+
+
+State 60
+
+   24 statement: compound_stmt .
+
+    $default  reduce using rule 24 (statement)
+
+
+State 61
+
+   21 statement_list: statement_list statement .
+
+    $default  reduce using rule 21 (statement_list)
+
+
+State 62
+
+   23 statement: expression_stmt .
+
+    $default  reduce using rule 23 (statement)
+
+
+State 63
+
+   25 statement: if_stmt .
+
+    $default  reduce using rule 25 (statement)
+
+
+State 64
+
+   26 statement: while_stmt .
+
+    $default  reduce using rule 26 (statement)
+
+
+State 65
+
+   27 statement: return_stmt .
+
+    $default  reduce using rule 27 (statement)
+
+
+State 66
+
+   28 statement: write_stmt .
+
+    $default  reduce using rule 28 (statement)
+
+
+State 67
+
+   29 expression_stmt: expression . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 95
+
+
+State 68
+
+   39 expression: var . ASSIGNATION_CONST expression
+
+    ASSIGNATION_CONST  shift, and go to state 96
+
+
+State 69
+
+   40 expression: comp_exp .
+
+    $default  reduce using rule 40 (expression)
+
+
+State 70
+
+   44 comp_exp: e . COMPARATORS e
+   45         | e .
+   46 e: e . addop t
+
+    COMPARATORS  shift, and go to state 97
+    PLUS_CONST   shift, and go to state 98
+    MINUS_CONST  shift, and go to state 99
+
+    $default  reduce using rule 45 (comp_exp)
+
+    addop  go to state 100
+
+
+State 71
+
+   47 e: t .
+   50 t: t . mulop f
+
+    ASTERISC_CONST  shift, and go to state 101
+    MUL_OPERATION   shift, and go to state 102
+
+    $default  reduce using rule 47 (e)
+
+    mulop  go to state 103
+
+
+State 72
+
+   51 t: f .
+
+    $default  reduce using rule 51 (t)
+
+
+State 73
+
+   57 f: factor .
+
+    $default  reduce using rule 57 (f)
+
+
+State 74
+
+   42 var: variable_array_index .
+   63 factor: variable_array_index .
+
+    ASSIGNATION_CONST  reduce using rule 42 (var)
+    $default           reduce using rule 63 (factor)
+
+
+State 75
+
+   60 factor: read_stmt .
+
+    $default  reduce using rule 60 (factor)
+
+
+State 76
+
+   59 factor: fun_call .
+
+    $default  reduce using rule 59 (factor)
+
+
+State 77
+
+   68 fun_call: IDENTIF LEFT_PARENTHESIS . args RIGHT_PARENTHESIS
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    $default  reduce using rule 70 (args)
+
+    expression            go to state 104
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+    args                  go to state 105
+    arg_list              go to state 106
+
+
+State 78
+
+   66 variable_array_index: IDENTIF LEFT_BRACKET_ . expression RIGHT_BRACKET_
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    expression            go to state 107
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 79
+
+   58 factor: LEFT_PARENTHESIS expression . RIGHT_PARENTHESIS
+
+    RIGHT_PARENTHESIS  shift, and go to state 108
+
+
+State 80
+
+   43 var: ASTERISC_CONST IDENTIF .
+   61 factor: ASTERISC_CONST IDENTIF .
+   62       | IDENTIF .
+   66 variable_array_index: IDENTIF . LEFT_BRACKET_ expression RIGHT_BRACKET_
+   68 fun_call: IDENTIF . LEFT_PARENTHESIS args RIGHT_PARENTHESIS
+
+    LEFT_PARENTHESIS  shift, and go to state 77
+    LEFT_BRACKET_     shift, and go to state 78
+
+    RIGHT_PARENTHESIS  reduce using rule 61 (factor)
+    RIGHT_PARENTHESIS  [reduce using rule 62 (factor)]
+    RIGHT_BRACKET_     reduce using rule 61 (factor)
+    RIGHT_BRACKET_     [reduce using rule 62 (factor)]
+    SEMI_COLON         reduce using rule 61 (factor)
+    SEMI_COLON         [reduce using rule 62 (factor)]
+    COMMA_CONST        reduce using rule 61 (factor)
+    COMMA_CONST        [reduce using rule 62 (factor)]
+    ASTERISC_CONST     reduce using rule 61 (factor)
+    ASTERISC_CONST     [reduce using rule 62 (factor)]
+    ASSIGNATION_CONST  reduce using rule 43 (var)
+    COMPARATORS        reduce using rule 61 (factor)
+    COMPARATORS        [reduce using rule 62 (factor)]
+    PLUS_CONST         reduce using rule 61 (factor)
+    PLUS_CONST         [reduce using rule 62 (factor)]
+    MINUS_CONST        reduce using rule 61 (factor)
+    MINUS_CONST        [reduce using rule 62 (factor)]
+    MUL_OPERATION      reduce using rule 61 (factor)
+    MUL_OPERATION      [reduce using rule 62 (factor)]
+    $default           reduce using rule 61 (factor)
+
+
+State 81
+
+   61 factor: ASTERISC_CONST . IDENTIF
+
+    IDENTIF  shift, and go to state 109
+
+
+State 82
+
+   56 f: ASTERISC_CONST factor .
+
+    $default  reduce using rule 56 (f)
+
+
+State 83
+
+   63 factor: variable_array_index .
+
+    $default  reduce using rule 63 (factor)
+
+
+State 84
+
+   62 factor: IDENTIF .
+   66 variable_array_index: IDENTIF . LEFT_BRACKET_ expression RIGHT_BRACKET_
+   68 fun_call: IDENTIF . LEFT_PARENTHESIS args RIGHT_PARENTHESIS
+
+    LEFT_PARENTHESIS  shift, and go to state 77
+    LEFT_BRACKET_     shift, and go to state 78
+
+    $default  reduce using rule 62 (factor)
+
+
+State 85
+
+   55 f: AMPERSAND_CONST factor .
+
+    $default  reduce using rule 55 (f)
+
+
+State 86
+
+   56 f: ASTERISC_CONST . factor
+   61 factor: ASTERISC_CONST . IDENTIF
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 110
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 81
+    READ_EXPR         shift, and go to state 59
+
+    factor                go to state 82
+    variable_array_index  go to state 83
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 87
+
+   54 f: MINUS_CONST f .
+
+    $default  reduce using rule 54 (f)
+
+
+State 88
+
+   31 if_stmt: IF_EXPR LEFT_PARENTHESIS . expression RIGHT_PARENTHESIS statement else_stmt
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    expression            go to state 111
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 89
+
+   34 while_stmt: WHILE_EXPR LEFT_PARENTHESIS . expression RIGHT_PARENTHESIS statement
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    expression            go to state 112
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 90
+
+   35 return_stmt: RETURN_EXPR SEMI_COLON .
+
+    $default  reduce using rule 35 (return_stmt)
+
+
+State 91
+
+   36 return_stmt: RETURN_EXPR expression . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 113
+
+
+State 92
+
+   37 write_stmt: WRITE_EXPR LEFT_PARENTHESIS . expression RIGHT_PARENTHESIS SEMI_COLON
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    expression            go to state 114
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 93
+
+   38 write_stmt: WRITELN_EXPR LEFT_PARENTHESIS . RIGHT_PARENTHESIS SEMI_COLON
+
+    RIGHT_PARENTHESIS  shift, and go to state 115
+
+
+State 94
+
+   67 read_stmt: READ_EXPR LEFT_PARENTHESIS . RIGHT_PARENTHESIS
+
+    RIGHT_PARENTHESIS  shift, and go to state 116
+
+
+State 95
+
+   29 expression_stmt: expression SEMI_COLON .
+
+    $default  reduce using rule 29 (expression_stmt)
+
+
+State 96
+
+   39 expression: var ASSIGNATION_CONST . expression
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    expression            go to state 117
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 97
+
+   44 comp_exp: e COMPARATORS . e
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 84
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 86
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    e                     go to state 118
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 83
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 98
+
+   48 addop: PLUS_CONST .
+
+    $default  reduce using rule 48 (addop)
+
+
+State 99
+
+   49 addop: MINUS_CONST .
+
+    $default  reduce using rule 49 (addop)
+
+
+State 100
+
+   46 e: e addop . t
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 84
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 86
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    t                     go to state 119
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 83
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 101
+
+   52 mulop: ASTERISC_CONST .
+
+    $default  reduce using rule 52 (mulop)
+
+
+State 102
+
+   53 mulop: MUL_OPERATION .
+
+    $default  reduce using rule 53 (mulop)
+
+
+State 103
+
+   50 t: t mulop . f
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 84
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 86
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    f                     go to state 120
+    factor                go to state 73
+    variable_array_index  go to state 83
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 104
+
+   72 arg_list: expression .
+
+    $default  reduce using rule 72 (arg_list)
+
+
+State 105
+
+   68 fun_call: IDENTIF LEFT_PARENTHESIS args . RIGHT_PARENTHESIS
+
+    RIGHT_PARENTHESIS  shift, and go to state 121
+
+
+State 106
+
+   69 args: arg_list .
+   71 arg_list: arg_list . COMMA_CONST expression
+
+    COMMA_CONST  shift, and go to state 122
+
+    $default  reduce using rule 69 (args)
+
+
+State 107
+
+   66 variable_array_index: IDENTIF LEFT_BRACKET_ expression . RIGHT_BRACKET_
+
+    RIGHT_BRACKET_  shift, and go to state 123
+
+
+State 108
+
+   58 factor: LEFT_PARENTHESIS expression RIGHT_PARENTHESIS .
+
+    $default  reduce using rule 58 (factor)
+
+
+State 109
+
+   61 factor: ASTERISC_CONST IDENTIF .
+
+    $default  reduce using rule 61 (factor)
+
+
+State 110
+
+   61 factor: ASTERISC_CONST IDENTIF .
+   62       | IDENTIF .
+   66 variable_array_index: IDENTIF . LEFT_BRACKET_ expression RIGHT_BRACKET_
+   68 fun_call: IDENTIF . LEFT_PARENTHESIS args RIGHT_PARENTHESIS
+
+    LEFT_PARENTHESIS  shift, and go to state 77
+    LEFT_BRACKET_     shift, and go to state 78
+
+    RIGHT_PARENTHESIS  reduce using rule 61 (factor)
+    RIGHT_PARENTHESIS  [reduce using rule 62 (factor)]
+    RIGHT_BRACKET_     reduce using rule 61 (factor)
+    RIGHT_BRACKET_     [reduce using rule 62 (factor)]
+    SEMI_COLON         reduce using rule 61 (factor)
+    SEMI_COLON         [reduce using rule 62 (factor)]
+    COMMA_CONST        reduce using rule 61 (factor)
+    COMMA_CONST        [reduce using rule 62 (factor)]
+    ASTERISC_CONST     reduce using rule 61 (factor)
+    ASTERISC_CONST     [reduce using rule 62 (factor)]
+    COMPARATORS        reduce using rule 61 (factor)
+    COMPARATORS        [reduce using rule 62 (factor)]
+    PLUS_CONST         reduce using rule 61 (factor)
+    PLUS_CONST         [reduce using rule 62 (factor)]
+    MINUS_CONST        reduce using rule 61 (factor)
+    MINUS_CONST        [reduce using rule 62 (factor)]
+    MUL_OPERATION      reduce using rule 61 (factor)
+    MUL_OPERATION      [reduce using rule 62 (factor)]
+    $default           reduce using rule 61 (factor)
+
+
+State 111
+
+   31 if_stmt: IF_EXPR LEFT_PARENTHESIS expression . RIGHT_PARENTHESIS statement else_stmt
+
+    RIGHT_PARENTHESIS  shift, and go to state 124
+
+
+State 112
+
+   34 while_stmt: WHILE_EXPR LEFT_PARENTHESIS expression . RIGHT_PARENTHESIS statement
+
+    RIGHT_PARENTHESIS  shift, and go to state 125
+
+
+State 113
+
+   36 return_stmt: RETURN_EXPR expression SEMI_COLON .
+
+    $default  reduce using rule 36 (return_stmt)
+
+
+State 114
+
+   37 write_stmt: WRITE_EXPR LEFT_PARENTHESIS expression . RIGHT_PARENTHESIS SEMI_COLON
+
+    RIGHT_PARENTHESIS  shift, and go to state 126
+
+
+State 115
+
+   38 write_stmt: WRITELN_EXPR LEFT_PARENTHESIS RIGHT_PARENTHESIS . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 127
+
+
+State 116
+
+   67 read_stmt: READ_EXPR LEFT_PARENTHESIS RIGHT_PARENTHESIS .
+
+    $default  reduce using rule 67 (read_stmt)
+
+
+State 117
+
+   39 expression: var ASSIGNATION_CONST expression .
+
+    $default  reduce using rule 39 (expression)
+
+
+State 118
+
+   44 comp_exp: e COMPARATORS e .
+   46 e: e . addop t
+
+    PLUS_CONST   shift, and go to state 98
+    MINUS_CONST  shift, and go to state 99
+
+    $default  reduce using rule 44 (comp_exp)
+
+    addop  go to state 100
+
+
+State 119
+
+   46 e: e addop t .
+   50 t: t . mulop f
+
+    ASTERISC_CONST  shift, and go to state 101
+    MUL_OPERATION   shift, and go to state 102
+
+    $default  reduce using rule 46 (e)
+
+    mulop  go to state 103
+
+
+State 120
+
+   50 t: t mulop f .
+
+    $default  reduce using rule 50 (t)
+
+
+State 121
+
+   68 fun_call: IDENTIF LEFT_PARENTHESIS args RIGHT_PARENTHESIS .
+
+    $default  reduce using rule 68 (fun_call)
+
+
+State 122
+
+   71 arg_list: arg_list COMMA_CONST . expression
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    READ_EXPR         shift, and go to state 59
+
+    expression            go to state 128
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 123
+
+   66 variable_array_index: IDENTIF LEFT_BRACKET_ expression RIGHT_BRACKET_ .
+
+    $default  reduce using rule 66 (variable_array_index)
+
+
+State 124
+
+   31 if_stmt: IF_EXPR LEFT_PARENTHESIS expression RIGHT_PARENTHESIS . statement else_stmt
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    LEFT_CURLY_       shift, and go to state 34
+    SEMI_COLON        shift, and go to state 50
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    IF_EXPR           shift, and go to state 54
+    WHILE_EXPR        shift, and go to state 55
+    RETURN_EXPR       shift, and go to state 56
+    WRITE_EXPR        shift, and go to state 57
+    WRITELN_EXPR      shift, and go to state 58
+    READ_EXPR         shift, and go to state 59
+
+    compound_stmt         go to state 60
+    statement             go to state 129
+    expression_stmt       go to state 62
+    if_stmt               go to state 63
+    while_stmt            go to state 64
+    return_stmt           go to state 65
+    write_stmt            go to state 66
+    expression            go to state 67
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 125
+
+   34 while_stmt: WHILE_EXPR LEFT_PARENTHESIS expression RIGHT_PARENTHESIS . statement
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    LEFT_CURLY_       shift, and go to state 34
+    SEMI_COLON        shift, and go to state 50
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    IF_EXPR           shift, and go to state 54
+    WHILE_EXPR        shift, and go to state 55
+    RETURN_EXPR       shift, and go to state 56
+    WRITE_EXPR        shift, and go to state 57
+    WRITELN_EXPR      shift, and go to state 58
+    READ_EXPR         shift, and go to state 59
+
+    compound_stmt         go to state 60
+    statement             go to state 130
+    expression_stmt       go to state 62
+    if_stmt               go to state 63
+    while_stmt            go to state 64
+    return_stmt           go to state 65
+    write_stmt            go to state 66
+    expression            go to state 67
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 126
+
+   37 write_stmt: WRITE_EXPR LEFT_PARENTHESIS expression RIGHT_PARENTHESIS . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 131
+
+
+State 127
+
+   38 write_stmt: WRITELN_EXPR LEFT_PARENTHESIS RIGHT_PARENTHESIS SEMI_COLON .
+
+    $default  reduce using rule 38 (write_stmt)
+
+
+State 128
+
+   71 arg_list: arg_list COMMA_CONST expression .
+
+    $default  reduce using rule 71 (arg_list)
+
+
+State 129
+
+   31 if_stmt: IF_EXPR LEFT_PARENTHESIS expression RIGHT_PARENTHESIS statement . else_stmt
+
+    ELSE_EXPR  shift, and go to state 132
+
+    ELSE_EXPR  [reduce using rule 33 (else_stmt)]
+    $default   reduce using rule 33 (else_stmt)
+
+    else_stmt  go to state 133
+
+
+State 130
+
+   34 while_stmt: WHILE_EXPR LEFT_PARENTHESIS expression RIGHT_PARENTHESIS statement .
+
+    $default  reduce using rule 34 (while_stmt)
+
+
+State 131
+
+   37 write_stmt: WRITE_EXPR LEFT_PARENTHESIS expression RIGHT_PARENTHESIS SEMI_COLON .
+
+    $default  reduce using rule 37 (write_stmt)
+
+
+State 132
+
+   32 else_stmt: ELSE_EXPR . statement
+
+    INT_VALUE         shift, and go to state 45
+    STRING_VALUE      shift, and go to state 46
+    IDENTIF           shift, and go to state 47
+    LEFT_PARENTHESIS  shift, and go to state 48
+    LEFT_CURLY_       shift, and go to state 34
+    SEMI_COLON        shift, and go to state 50
+    ASTERISC_CONST    shift, and go to state 51
+    AMPERSAND_CONST   shift, and go to state 52
+    MINUS_CONST       shift, and go to state 53
+    IF_EXPR           shift, and go to state 54
+    WHILE_EXPR        shift, and go to state 55
+    RETURN_EXPR       shift, and go to state 56
+    WRITE_EXPR        shift, and go to state 57
+    WRITELN_EXPR      shift, and go to state 58
+    READ_EXPR         shift, and go to state 59
+
+    compound_stmt         go to state 60
+    statement             go to state 134
+    expression_stmt       go to state 62
+    if_stmt               go to state 63
+    while_stmt            go to state 64
+    return_stmt           go to state 65
+    write_stmt            go to state 66
+    expression            go to state 67
+    var                   go to state 68
+    comp_exp              go to state 69
+    e                     go to state 70
+    t                     go to state 71
+    f                     go to state 72
+    factor                go to state 73
+    variable_array_index  go to state 74
+    read_stmt             go to state 75
+    fun_call              go to state 76
+
+
+State 133
+
+   31 if_stmt: IF_EXPR LEFT_PARENTHESIS expression RIGHT_PARENTHESIS statement else_stmt .
+
+    $default  reduce using rule 31 (if_stmt)
+
+
+State 134
+
+   32 else_stmt: ELSE_EXPR statement .
+
+    $default  reduce using rule 32 (else_stmt)
