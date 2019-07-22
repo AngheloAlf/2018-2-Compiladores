@@ -1,0 +1,63 @@
+\documentclass[english, spanish, fleqn]{article}
+\usepackage{fourier}
+\usepackage{babel}
+\usepackage{minted}
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+
+\newcommand{\num}{1}
+
+\title{Compiladores \\
+       ``Le hacemos al léxico''}
+\author{Dragon Slayers}
+\date{8 de octubre de 2018}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+  El rendimiento del análisis léxico es vital.
+  Compararemos varias opciones para efectuar una tarea típica:
+  aislar \textquote{palabras} en archivos grandes
+  (similar a lo que hace el programa \mintinline{shell}{wc(1)}).
+  Para nuestros efectos,
+  una palabra es una secuencia de letras, posiblemente unidas por guión
+  (como son \texttt{letrado} o \texttt{no-terminal};
+   note que por ejemplo \texttt{O'Higgins} cuenta como dos palabras,
+   \texttt{Entel123} o \texttt{3Com} cuentan como una
+   y \texttt{1234} o \texttt{3,141592} no cuentan).
+  Para simplificar,
+  considere texto puramente ASCII
+  (texto internacional
+   tiene sus propias enternecedoras complicaciones\ldots).
+  Use las siguientes alternativas:
+  \begin{enumerate}
+  \item % 20182t1p1
+    Escrito a mano,
+    leyendo caracter a caracter vía \mintinline{C}{getc(3)}.
+  \item % 20182t1p2
+    Escrito a mano,
+    leyendo el archivo completo a memoria con \mintinline{C}{read(2)}
+    y procesando allí
+  \item % 20182t1p3
+    Escrito a mano,
+    mapeando el archivo completo a memoria con \mintinline{C}{mmap(2)}
+    y procesando allí
+  \item % 2082t1p4
+    Usando \mintinline{shell}{flex(1)},
+    un \emph{\foreignlanguage{english}{scanner}} interactivo
+  \item % 2082t1p5
+    Usando \mintinline{shell}{flex(1)},
+    un \emph{\foreignlanguage{english}{scanner}} no interactivo
+  \end{enumerate}
+  Resuma sus resultados y conclusiones.
+
+\input{condiciones}
+  \vfill\hfill DS/HvB/\LaTeXe
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

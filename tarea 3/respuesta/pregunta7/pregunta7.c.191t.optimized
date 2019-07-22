@@ -1,0 +1,43 @@
+
+;; Function main (main, funcdef_no=0, decl_uid=2283, cgraph_uid=0, symbol_order=0)
+
+main ()
+{
+  int i;
+  int x;
+  int D.2293;
+  int D.2292;
+  int D.2291;
+  int _5;
+  int _6;
+  int _11;
+
+  <bb 2>:
+  x_3 = 0;
+  i_4 = 0;
+  goto <bb 4>;
+
+  <bb 3>:
+  _5 = i_2 * 4;
+  _6 = _5 + 15;
+  x_7 = _6 + x_1;
+  i_8 = i_2 + 1;
+
+  <bb 4>:
+  # x_1 = PHI <x_3(2), x_7(3)>
+  # i_2 = PHI <i_4(2), i_8(3)>
+  if (i_2 <= 199)
+    goto <bb 3>;
+  else
+    goto <bb 5>;
+
+  <bb 5>:
+  printf ("%i\n", x_1);
+  _11 = 0;
+
+<L3>:
+  return _11;
+
+}
+
+
