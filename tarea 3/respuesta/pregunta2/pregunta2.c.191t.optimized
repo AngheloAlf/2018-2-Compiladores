@@ -1,0 +1,98 @@
+
+;; Function square (square, funcdef_no=38, decl_uid=3124, cgraph_uid=38, symbol_order=38)
+
+Removing basic block 5
+square (char * x)
+{
+  int iftmp.0_1;
+  char _4;
+  int _5;
+  char _6;
+  int _7;
+  int _8;
+  char _9;
+  int _10;
+  int iftmp.0_11;
+
+  <bb 2>:
+  if (x_2(D) != 0B)
+    goto <bb 3>;
+  else
+    goto <bb 4>;
+
+  <bb 3>:
+  _4 = *x_2(D);
+  _5 = (int) _4;
+  _6 = MEM[(char *)x_2(D) + 1B];
+  _7 = (int) _6;
+  _8 = _5 + _7;
+  _9 = MEM[(char *)x_2(D) + 2B];
+  _10 = (int) _9;
+  iftmp.0_11 = _8 - _10;
+
+  <bb 4>:
+  # iftmp.0_1 = PHI <iftmp.0_11(3), 0(2)>
+  return iftmp.0_1;
+
+}
+
+
+
+;; Function square_pure (square_pure, funcdef_no=39, decl_uid=3127, cgraph_uid=39, symbol_order=39)
+
+Removing basic block 5
+square_pure (char * x)
+{
+  int iftmp.1_1;
+  char _4;
+  int _5;
+  char _6;
+  int _7;
+  int _8;
+  char _9;
+  int _10;
+  int iftmp.1_11;
+
+  <bb 2>:
+  if (x_2(D) != 0B)
+    goto <bb 3>;
+  else
+    goto <bb 4>;
+
+  <bb 3>:
+  _4 = *x_2(D);
+  _5 = (int) _4;
+  _6 = MEM[(char *)x_2(D) + 1B];
+  _7 = (int) _6;
+  _8 = _5 + _7;
+  _9 = MEM[(char *)x_2(D) + 2B];
+  _10 = (int) _9;
+  iftmp.1_11 = _8 - _10;
+
+  <bb 4>:
+  # iftmp.1_1 = PHI <iftmp.1_11(3), 0(2)>
+  return iftmp.1_1;
+
+}
+
+
+
+;; Function main (main, funcdef_no=40, decl_uid=3131, cgraph_uid=40, symbol_order=40) (executed once)
+
+main (int argc, char * * argv)
+{
+  char coso[100];
+  int i;
+  int _4;
+
+  <bb 2>:
+  scanf ("%s", &coso);
+  i_3 = square_pure (&coso);
+  _4 = i_3 + i_3;
+  __printf_chk (1, "%i", _4);
+  coso ={v} {CLOBBER};
+  return 0;
+
+}
+
+

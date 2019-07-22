@@ -1,0 +1,194 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+%\usepackage{fancyhdr}
+%\usepackage{lipsum}
+%\usepackage{enumerate}
+%\usepackage{multicol}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{xcolor}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{ mathrsfs }
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\usepackage{ dsfont }
+\usepackage{afterpage}
+
+\usepackage{tikz} %% Grafos
+\usepackage{fancyhdr} %% Para las cosas en las esquinas de cada pagina
+
+\usepackage[a4paper,bindingoffset=0.0in,left=0.60in,right=0.70in,top=0.7in,bottom=0.7in,footskip=.25in]{geometry}
+
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\newcommand{\cero}{0}
+\newcommand{\sumMayorIgual}[2][\cero]{\sum_{n\geq#1}{#2}}
+
+\newcommand{\eclosure}[1]{\epsilon\text{-closure}(\{#1\})}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\definecolor{bggray}{rgb}{0.95,0.95,0.95}
+\lstdefinestyle{mypy}{
+  language=python,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\lstdefinestyle{myC}{
+  language=C,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\lstdefinestyle{mygeneric}{
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\renewcommand{\lstlistingname}{Código}
+
+\newcommand{\ramo}{INF-341: Compiladores}
+\newcommand{\numeroTarea}{1}
+\newcommand{\nombreTarea}{``Le hacemos al léxico''}
+
+\newcommand{\xstar}{x^\star}
+
+\begin{document}
+
+\lstset
+{
+    language=[LaTeX]TeX,
+    breaklines=false,
+    basicstyle=\tt\scriptsize,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{magenta},
+}
+
+\title{\ramo \\
+Tarea \#\numeroTarea\\
+\nombreTarea
+}
+\author{\href{mailto:anghelo.carvajal.14@sansano.usm.cl}{Anghelo Carvajal} \\ 201473062-4
+}
+
+\maketitle
+
+\pagenumbering{gobble} %% Desactiva la numeracion de paginas
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Tarea \numeroTarea: \nombreTarea}
+
+%% \chead{\thesection} % 
+\chead{\ramo}
+
+%% \rhead{\rightmark} % 
+\rhead{\rightmark}
+
+\lfoot{\LaTeXe}
+
+%% \cfoot{} %
+
+\rfoot{Página \thepage}
+
+%  \thepage
+% adds number of the current page.
+%  \thechapter
+% adds number of the current chapter.
+%  \thesection
+% adds number of the current section.
+%  \chaptername
+% adds the word "Chapter" in English or its equivalent in the current language.
+%  \leftmark
+% adds name and number of the current top-level structure (for example, Chapter for reports and books classes; Section for articles ) in uppercase letters.
+%  \rightmark
+% adds name and number of the current next to top-level structure (Section for reports and books; Subsection for articles) in uppercase letters.
+
+\newpage
+
+%% \section{Section}
+
+\pagenumbering{arabic} %% Activa numeracion de paginas
+
+Para poder crear el analizador léxico, crearemos una gramática que acepte palabras. Para que una palabra sea aceptada como tal, esta debe contener al menos una letra (minúscula o mayúscula). Una palabra puede contener caracteres numéricos o guiones. Esta gramática quedaría formada de la siguiente forma:
+\begin{align*}
+    LETRA &= [a-zA-Z] \\
+    DEMAS &= [0-9]|"-" \\
+    Gramatica &= (\{DEMAS\}|\{LETRA\})^*\{LETRA\}^+(\{DEMAS\}|\{LETRA\})^*
+\end{align*}
+
+Tanto como para la parte 1 (leer el archivo con \texttt{getc(3)}), la parte 2 (usar \texttt{read(2)}) y la parte 3 (\texttt{mmap(2)}), el analizador léxico es el mismo. Se abre el archivo, saltan los caracteres no validos, hasta encontrar algún carácter valido. Se lee y analiza para saber si es una palabra valida y se contabiliza si es el caso. Luego se sigue leyendo y saltando caracteres inválidos hasta llegar al fin del archivo y finalmente imprimir por pantalla el conteo de palabras.
+
+La implementación del código descrito seria la siguiente:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{main.c}
+    ] {src/common/main.c}
+    
+La función \texttt{getFile()} se encarga de abrir el archivo de la forma correspondiente. \texttt{closeFile()} se encarga de cerrar el archivo (o vaciar la memoria según corresponda). \texttt{getCharacter()} entrega el siguiente carácter a leer (o \texttt{EOF} según corresponda).
+
+La implementación con flex es bastante sencilla. Tan solo implementar la gramática explicada anteriormente. La implementación seria la siguiente:
+
+\lstinputlisting[
+    style=mygeneric,
+    caption=\texttt{4/tarea-1-4.l}
+    ] {src/4/tarea-1-4.l}
+    
+Finalmente, analizamos los tiempos de ejecucion de cada uno de los programas y los comparamos. Para esta comparación, usaremos el programa \texttt{time(1)}.
+
+Los resultados son los siguientes:
+\begin{enumerate}
+    \item \texttt{time ./tarea-1-1 MobyDick.txt} \\ \tab Tiempo de ejecucion: 29ms.
+    
+    \item \texttt{time ./tarea-1-2 MobyDick.txt} \\ \tab Tiempo de ejecucion: 24ms.
+    
+    \item \texttt{time ./tarea-1-3 MobyDick.txt} \\ \tab Tiempo de ejecucion: 19ms.
+    
+    \item \texttt{time ./tarea-1-4 < MobyDick.txt} \\ \tab Tiempo de ejecucion: 36ms.
+    
+    \item \texttt{time ./tarea-1-5 < MobyDick.txt} \\ \tab Tiempo de ejecucion: 32ms.
+\end{enumerate}
+
+Lógicamente, la solución mas rápida fue con \texttt{mmap(2)} debido al mapeo directo a la memoria virtual.
+
+Las implementaciones usando flex, aunque mas rápidas de programar, son las mas lentas en \textit{runtime}, probablemente por el \textit{overhead} que produce todo el código auto-generado por flex.
+
+La opción que utiliza \texttt{getc(3)} es la mas lenta (de las programadas a manos), debido a que lee carácter a carácter desde el disco. Leer desde la ram (parte 2, pasar el archivo a memoria con \texttt{read(2)}) es mas rápido, debido a que hay una única lectura del archivo.
+
+\end{document}

@@ -1,0 +1,311 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+%\usepackage{fancyhdr}
+%\usepackage{lipsum}
+%\usepackage{enumerate}
+%\usepackage{multicol}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{xcolor}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{ mathrsfs }
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\usepackage{ dsfont }
+\usepackage{afterpage}
+
+\usepackage{tikz} %% Grafos
+\usepackage{fancyhdr} %% Para las cosas en las esquinas de cada pagina
+
+\usepackage[a4paper,bindingoffset=0.0in,left=0.60in,right=0.70in,top=0.7in,bottom=0.7in,footskip=.25in]{geometry}
+
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\newcommand{\cero}{0}
+\newcommand{\sumMayorIgual}[2][\cero]{\sum_{n\geq#1}{#2}}
+
+\newcommand{\eclosure}[1]{\epsilon\text{-closure}(\{#1\})}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\definecolor{bggray}{rgb}{0.95,0.95,0.95}
+\lstdefinestyle{mypy}{
+  language=python,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\lstdefinestyle{myC}{
+  language=C,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\renewcommand{\lstlistingname}{Código}   
+    
+\newcommand{\ramo}{INF-341: Compiladores}
+\newcommand{\numeroTarea}{3}
+\newcommand{\nombreTarea}{``¿Optimiza?"}
+
+\newcommand{\xstar}{x^\star}
+
+\begin{document}
+
+\lstset
+{
+    language=[LaTeX]TeX,
+    breaklines=false,
+    basicstyle=\tt\scriptsize,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{magenta},
+}
+
+\title{\ramo \\
+Tarea \#\numeroTarea\\
+\nombreTarea
+}
+\author{\href{mailto:anghelo.carvajal.14@gmail.com}{Anghelo Carvajal} \\ 201473062-4
+}
+
+\maketitle
+
+\pagenumbering{gobble} %% Desactiva la numeracion de paginas
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Tarea \numeroTarea: \nombreTarea}
+
+\chead{\ramo\thesection} % 
+
+%% \rhead{\rightmark} % 
+\rhead{Pregunta \thesection}
+
+\lfoot{\LaTeXe}
+
+%% \cfoot{} %
+
+\rfoot{Página \thepage}
+
+%  \thepage
+% adds number of the current page.
+%  \thechapter
+% adds number of the current chapter.
+%  \thesection
+% adds number of the current section.
+%  \chaptername
+% adds the word "Chapter" in English or its equivalent in the current language.
+%  \leftmark
+% adds name and number of the current top-level structure (for example, Chapter for reports and books classes; Section for articles ) in uppercase letters.
+%  \rightmark
+% adds name and number of the current next to top-level structure (Section for reports and books; Subsection for articles) in uppercase letters.
+
+\newpage
+
+%% \section{Section}
+
+\pagenumbering{arabic} %% Activa numeracion de paginas
+
+
+Interesa saber qué mejoras al código es capaz de efectuar su compilador preferido. Algunos tienen diversas opciones (o niveles) de optimización. Explore las relevantes. Al efecto, considere al menos las siguientes situaciones:
+
+\section{Pregunta 1}
+
+¿Efectúa \textit{constant folding}?
+
+\subsection{Respuesta 1}
+
+Teniendo en consideración el siguiente código, donde tenemos una expresión constante:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta1.c}
+    ] {pregunta1/pregunta1.c}
+
+Al compilar el código a \textit{assembly}, resulta lo siguiente:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta1.s}
+    ] {pregunta1/pregunta1.s}
+
+Lo cual podemos notar que en vez de dejar la multiplicación para el \textit{run-time}, deja expresado el resultado de esta multiplicación como un valor constante ya calculado.
+
+\section{Pregunta 2}
+
+En GCC, es posible indicar que una función depende solo de sus argumentos,
+como por ejemplo el prototipo
+\texttt{\_\_attribute\_\_((pure)) int sqr(int);}.
+
+¿Aprovecha realmente esto? O sea, si la función se llama varias veces con el mismo argumento, ¿la llama una sola vez?
+
+\subsection{Respuesta 2}
+
+Considerando el siguiente código, en el cual llamamos a la misma función \textit{pure} mas de una vez con el mismo argumento:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta2.c}
+    ] {pregunta2/pregunta2.c}
+
+El código anterior genera el siguiente código intermedio:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta2.c.191t.optimized}
+    ] {pregunta2/pregunta2.c.191t.optimized}
+
+De lo anterior podemos ver claramente que en vez de llamar 3 veces a la función \texttt{square\_pure}, la llama una única vez y suma a si mismo ese resultado las veces necesarias (en este caso 3). Esto ocurre debido a que el compilador sabe que el output no va a cambiar, por lo que puede hacer la optimización.
+
+
+\section{Pregunta 3}
+
+¿Expande funciones en línea según dirige por ejemplo el listado 1? ¿Lo hace automáticamente para funciones «simples» (como la anterior) si fue definida antes? ¿Si se define después?
+
+\subsection{Respuesta 3}
+
+Se plantea el siguiente código con una función \textit{inline}.
+
+Nota: se usa \textit{static inline} en lugar de \textit{inline} a secas para entregar el resultado en un único archivo.
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta3.c}
+    ] {pregunta3/pregunta3.c}
+
+El código anterior genera el siguiente código intermedio:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta3.c.191t.optimized}
+    ] {pregunta3/pregunta3.c.191t.optimized}
+    
+Como podemos ver, en vez de haber un llamado a la función en cuestión, se insertaron un montón de lineas de códigos que corresponderían al llamado de esta función. 
+
+De modo que se esta respetando el \textit{inline}.
+
+\section{Pregunta 4}
+
+¿Se propagan valores de variables? O sea, por ejemplo si se asigna \texttt{a = 1;} y luego (después de varias otras líneas que no la afectan) se usa esta variable, ¿usa el valor? ¿Por ejemplo, elimina un \texttt{if (a != 1) \{ ... \}}?
+
+\subsection{Respuesta 4}
+
+Aquí indicamos un valor para \texttt{a}, y luego preguntamos si esa variable contiene un valor distinto al que le ingresamos originalmente:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta4.c}
+    ] {pregunta4/pregunta4.c}
+
+El código anterior genera el siguiente código intermedio:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta4.c.191t.optimized}
+    ] {pregunta4/pregunta4.c.191t.optimized}
+
+Como el compilador sabe que este valor no ha cambiado, se salta completamente el \textit{if}, no incluyendo ni la comparacion ni sus contenidos.
+
+\section{Pregunta 5}
+
+¿Se recalculan (sub)expresiones que no varían?
+
+\subsection{Respuesta 5}
+
+Tenemos el siguiente \texttt{for} donde un calculo es dependiente del índice, y el otro no:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta5.c}
+    ] {pregunta5/pregunta5.c}
+
+El código anterior genera el siguiente código intermedio:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta5.c.191t.optimized}
+    ] {pregunta5/pregunta5.c.191t.optimized}
+    
+Podemos ver que en vez de dejar que en \textit{run-time} se calcule la expresión que sabemos que siempre sera la misma (\texttt{x*x;}), el compilador cambia ese calculo por el resultado. 
+
+Esto lo podemos ver en la linea 20, donde se ve que deja expresado el \texttt{25}. 
+
+La linea dice: \texttt{\_5 = \_4 + 25;}.
+
+\section{Pregunta 6}
+
+¿Se calculan expresiones cuando se requieren solamente?
+
+\subsection{Respuesta 6}
+
+En el siguiente código podemos ver que calculamos una expresión numérica, la cual solo usamos dentro de un \texttt{if}:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta6.c}
+    ] {pregunta6/pregunta6.c}
+
+El código anterior genera el siguiente código intermedio:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{pregunta6.c.191t.optimized}
+    ] {pregunta6/pregunta6.c.191t.optimized}
+    
+Podemos ver que en el código generado solo calcula el numero necesario si es que la \texttt{flag} se cumple, a pesar de que dejamos el calculo fuera del \textit{if}.
+
+\section{Pregunta 7}
+
+¿Maneja variables de inducción, que tienen una relación lineal con el índice del ciclo? Por ejemplo, en el listado 4 podemos inicializar una variable temporal con \texttt{tmp = 15;} y en cada ciclo incrementar \texttt{tmp += 4;}.
+
+\subsection{Respuesta 7}
+
+\section{Pregunta 8}
+
+En ciclos con cuerpo corto (como los ejemplos previos) el costo del ciclo puede ser una fracción relevante del costo total. La modificación de \textit{loop unrolling} ejecuta varias iteraciones en cada ciclo. Detalle el ambiente empleado (sistema operativo, arquitectura, compilador, opciones).
+
+\subsection{Respuesta 8}
+
+
+
+\section{Detalles de arquitectura}
+
+Detalle el ambiente empleado (sistema operativo, arquitectura, compilador, opciones)
+
+\begin{enumerate}
+    \item Sistema operativo: Ubuntu 16.04
+    \item Arquitectura: x86-64
+    \item Compilador: gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+    \item -S -save-temps -fdump-tree-optimized -std=gnu11 -O1
+
+    
+\end{enumerate}
+
+
+
+\end{document}
