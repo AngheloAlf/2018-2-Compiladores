@@ -1,0 +1,17 @@
+# This is my-custom-script.service, which describes the my-custom-script.sh file
+[Unit]
+Description=This is executed on shutdown or reboot
+DefaultDependencies=no
+Wants=network-pre.target                                                                   # (if network is required before running the script)
+Before=network-pre.target shutdown.target reboot.target halt.target                        # Defines the order in which units are stoped. #(REQUIRED)
+
+[Service]
+Type=oneshot                                                                               # enables specifying multiple custom commands that are then executed sequentially. (REQUIRED)
+RemainAfterExit=true                                                                       # required by the oneshot setting (REQUIRED)
+Environment=ONE='one' "TWO='2"                                                             # you can set some environment variables, that may be necessary to pass as arguments
+ExecStart=/bin/true                                                                        # because is a shutdown script nothing is done when this service is started
+ExecStop=/bin/bash /var/tmp/my-custom-script.sh ${ONE} ${TWO}                              # < --*********** change to the script full path ************ (REQUIRED)
+TimeoutStopSec=1min 35s                                                                    # Configures the time to wait for stop. 
+
+[Install]
+WantedBy=multi-user.target                                                                 # When this unit is enabled, the units listed in WantedBy gain a Want dependency on the unit. (REQUIRED)

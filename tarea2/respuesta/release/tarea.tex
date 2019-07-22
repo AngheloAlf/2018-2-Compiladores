@@ -1,0 +1,244 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+%\usepackage{fancyhdr}
+%\usepackage{lipsum}
+%\usepackage{enumerate}
+%\usepackage{multicol}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{xcolor}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{ mathrsfs }
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\usepackage{ dsfont }
+\usepackage{afterpage}
+
+\usepackage{tikz} %% Grafos
+\usepackage{fancyhdr} %% Para las cosas en las esquinas de cada pagina
+
+\usepackage[a4paper,bindingoffset=0.0in,left=0.60in,right=0.70in,top=0.7in,bottom=0.7in,footskip=.25in]{geometry}
+
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\newcommand{\cero}{0}
+\newcommand{\sumMayorIgual}[2][\cero]{\sum_{n\geq#1}{#2}}
+
+\newcommand{\eclosure}[1]{\epsilon\text{-closure}(\{#1\})}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\definecolor{bggray}{rgb}{0.95,0.95,0.95}
+\lstdefinestyle{mypy}{
+  language=python,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\renewcommand{\lstlistingname}{Código}   
+    
+
+\newcommand{\numeroTarea}{2}
+\newcommand{\nombreTarea}{``Le seguimos haciendo al léxico"}
+
+\newcommand{\xstar}{x^\star}
+
+\begin{document}
+
+\lstset
+{
+    language=[LaTeX]TeX,
+    breaklines=false,
+    basicstyle=\tt\scriptsize,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{magenta},
+}
+
+\title{INF-341: Compiladores \\
+Tarea \#\numeroTarea\\
+\nombreTarea
+}
+\author{\href{mailto:anghelo.carvajal.14@gmail.com}{Anghelo Carvajal} \\ 201473062-4
+}
+
+\maketitle
+
+\pagenumbering{gobble} %% Desactiva la numeracion de paginas
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Tarea \numeroTarea: \nombreTarea}
+
+%% \chead{\thesection} % 
+
+%% \rhead{\rightmark} % 
+\rhead{\rightmark}
+
+\lfoot{\LaTeXe}
+
+%% \cfoot{} %
+
+\rfoot{Página \thepage}
+
+%  \thepage
+% adds number of the current page.
+%  \thechapter
+% adds number of the current chapter.
+%  \thesection
+% adds number of the current section.
+%  \chaptername
+% adds the word "Chapter" in English or its equivalent in the current language.
+%  \leftmark
+% adds name and number of the current top-level structure (for example, Chapter for reports and books classes; Section for articles ) in uppercase letters.
+%  \rightmark
+% adds name and number of the current next to top-level structure (Section for reports and books; Subsection for articles) in uppercase letters.
+
+\newpage
+
+%% \section{Section}
+
+\pagenumbering{arabic} %% Activa numeracion de paginas
+
+\section{Introducción}
+
+En nuestro analizador léxico para archivos \texttt{.ini}, definimos 8 tipos de tokens y 4 estados distintos de modo de poder identificar correctamente este archivo, para luego almacenar cada token en una estructura tipo diccionario.
+
+El código mostrado son fragmentos del código completo final.
+
+\section{Analizador léxico}
+
+\subsection{Tokens}
+Los tokens están definidos de la siguiente manera:
+\begin{itemize}
+    \item \texttt{NEWLINE}. \texttt{r"(\textbackslash n|\textbackslash r|(\textbackslash r\textbackslash n))"} \\ Calza los saltos de linea e indica que debemos entrar al estado inicial (\texttt{INITIAL}).
+    
+    Indicamos que retorna \texttt{None} para especificar que no nos interesa esto.
+    
+    \item \texttt{COMMENT}. \texttt{r"[;|\#].*"} \\ Calza los comentarios que empiecen con \texttt{;} o con \texttt{\#}. 
+    
+    Retorna nada, de modo que ignore los comentarios.
+    
+    \item \texttt{KEY}. \texttt{r"[\textasciicircum=;\textbackslash \#\textbackslash[\textbackslash]\textbackslash]+"} \\ Calza una llave o identificador. Este identificador esta definido como cualquier carácter que no sea un `\texttt{=}' (separador), `\texttt{;}', `\texttt{\#}' (comentarios) `\texttt{[}' o `\texttt{]}' (reservado para las secciones). 
+    
+    Además indicamos que debemos entrar al estado \texttt{KEY}. 
+    
+    Finalmente, tal como especifica la \href{http://portablecontacts.net/wiki/computing/ini-file}{documentación} proveída, tanto los identificadores como las secciones son \textit{case insensitivity}, de modo que retornamos el valor transformado a minúsculas.
+    
+    \item \texttt{KEY\_COMMENT}. \texttt{r"[ \textbackslash t]*[;|\textbackslash\#].*"} \\ Si estando en el estado \texttt{KEY} nos encontramos con un comentario, nos devolvemos al estado inicial.
+    
+    Si llegamos a este token, significa que el identificador fue \textit{seteado} sin un valor correspondiente, y tan solo se escribió un comentario al costado.
+    
+    \item \texttt{KEY\_NEWLINE}. \texttt{r"[ \textbackslash t]*(\textbackslash n|\textbackslash r|(\textbackslash r\textbackslash n))"}. \\ Similar al anterior, con la diferencia de que no hay comentarios al costado.
+    
+    \item \texttt{KEY\_SEPARATOR}. \texttt{r"[ \textbackslash t]*=[ \textbackslash t]*"} \\ Estando en el estado \texttt{KEY}, calza el símbolo `\texttt{=}' pudiendo estar rodeado de espacios o tabulaciones. 
+    
+    Después de esto entramos al estado \texttt{SEPARATOR}.
+    
+    \item \texttt{SEPARATOR\_VALUE}. \texttt{r"[\textasciicircum;\textbackslash \#\textbackslash n\textbackslash r]+"} \\ El valor asociado a un identificador. 
+    
+    Solo entramos aquí si es que antes hemos calzado un identificador y un separador.
+    
+    Puede ser cualquier carácter que no sean los reservados para comentarios, ni el salto de linea.
+    
+    Además, se quitan todos los espacios sobrantes al inicio o al final del valor. 
+    
+    También, si el valor es un numero entero positivo, este es transformado a una variable del tipo \texttt{int}, y si es un valor booleano (\texttt{true} o \texttt{false}, \texttt{case insensitive}) lo convierte a una variable del tipo \texttt{bool}. 
+    
+    Finalmente indica de que debemos devolvernos al estado \texttt{INITIAL}.
+    
+    \item \texttt{SECTION}. \texttt{r"\textbackslash["} \\ Calza el caracter [. Luego indicamos que entramos al estado \texttt{SECTION}
+    
+    \item \texttt{SECTION\_DATA}. \texttt{r"[a-zA-Z\textbackslash d\textbackslash-\textbackslash.\_]+"} \\ El nombre de la sección. Solo entramos aquí si ya calzamos un `\texttt{[}' con anterioridad.
+    
+    Esto calza caracteres alfanuméricos, guiones (-), puntos (.) y guiones bajos (\_).
+    
+    Luego entramos al estado \texttt{DATA}.
+    
+    \item \texttt{DATA\_END}. \texttt{r"\textbackslash ]"} \\ El final de una sección. 
+    
+    Solo entramos aquí si es que ya encontramos un nombre para la sección. Esto es útil para evitar secciones con nombres vacíos.
+    
+    Luego nos vamos al estado \texttt{INITIAL}.
+\end{itemize}
+
+\subsection{Estados}
+Se definieron 4 estados, complementando a \texttt{INITIAL}. Se detallan a continuación:
+
+\begin{itemize}
+    \item \texttt{KEY}. Indica que hemos calzado un identificador.
+    
+    Estando en este estado, solo podemos consumir los símbolos de comentarios o nueva linea, lo cual nos llevaría al estado \texttt{INITIAL}; o consumir el símbolo separador, lo cual nos lleva al estado \texttt{SEPARATOR}.
+    
+    \item \texttt{SEPARATOR}. Indica que hemos calzado el separador.
+    
+    Solo podemos entrar a este estado si es que ya nos encontramos en el estado \texttt{KEY}.
+    
+    En este estado, solo podemos consumir lo correspondiente al valor de un identificador, lo cual nos llevara al estado inicial nuevamente. Consumir cualquier otra cosa es un error.
+    
+    \item \texttt{SECTION} Indica que hemos calzado el símbolo de inicio de sección.
+    
+    En este estado solo podemos calzar el nombre de la sección, lo cual debería llevarnos al estado \texttt{DATA}
+    
+    \item \texttt{DATA}. Indica que hemos calzado el nombre de la sección.
+    
+    Estando en este estado, solo podemos calzar el final de la sección, llevándonos al estado \texttt{INITIAL}.
+\end{itemize}
+
+\subsection{La implementación}
+A continuación, se puede ver el código del analizador léxico. Se han omitido las funciones que manejan errores.
+
+\lstinputlisting[
+    style  = mypy,
+    caption= \texttt{analizador\_lexico.py}]{lexico.py}
+    
+
+\section{Hash}
+
+La función que se encarga de transformar los datos de entrada a una estructura \texttt{hash}, en este caso un diccionario, es \texttt{parseIniFile(fullFile)}, donde \texttt{fullFile} es toda la entrada de texto.
+
+El diccionario retornado tiene la siguiente estructura:
+\begin{itemize}
+    \item Las llaves son los nombres de las secciones en tipo \texttt{string}. 
+    
+    Si un identificador esta definido al comienzo del documento sin una sección, este sera almacenado dentro de la sección \texttt{""} (string vació). 
+    
+    Si todos los identificadores están dentro de alguna sección, la sección \texttt{""} no existirá dentro del diccionario.
+    
+    \item Los valores son diccionarios que contienen los identificadores de la sección correspondiente.
+    
+    Esta estructurado de la siguiente forma:
+    \begin{itemize}
+        \item La llave es el nombre del identificador. Tipo \texttt{string}.
+        
+        \item El valor es el valor del identificador correspondiente.
+        
+        Puede ser de distintos tipos, siendo \texttt{bool} si se encontro un \texttt{true} o un \texttt{false}, \texttt{int} si se encontro unicamente un numero positivo, \texttt{None} si el identificador fue \textit{seteado} sin un valor acompañante, o tipo \texttt{string} en caso contrario a los otros.
+    \end{itemize}
+\end{itemize}
+
+\lstinputlisting[
+    style  = mypy,
+    caption= \texttt{parser\_ini.py}]{parse_ini.py}
+
+
+
+
+\end{document}
