@@ -1,0 +1,28 @@
+Self:
+
+1. Do code checks instead of asserts
+-> Show error too
+
+
+
+From reference manual:
+
+[DONE] 1. Run-time arrays index checking:
+-> A BPL implementation must perform run-time bounds checking on array indices.  Rather than crashing, a BPL program should halt with an error message if an array index is negative or as large or larger than the allocated size of the array
+
+[DONE] 2. Check if non-void function has return
+-> If the return type is not void the function body should contain a return statement that returns a value of the return type.
+// I think the compiler already checks this, but I'm not sure.
+
+3. What? // Does this point contradicts point 1?
+-> The language does not require bounds checking on array indices –behavior in the case of inappropriate indices is unspecified.
+
+[DONE] 4. Verify if compiler already do this: & only aplies to variables and array elements
+-> The & operation obtains the address its operand; you can only take the address of variables and array elements.
+
+[DONE] 5. Verify if compiler already do this: * only aplies to “pointer to int” and “pointer to string”
+-> The * operation dereferences an address; this is only valid for operands of type “pointer to int” and “pointer to string”.
+
+[DONE] 6. Check function call arguments
+-> The arguments to a function call must match the function declaration in both number and type.
+
